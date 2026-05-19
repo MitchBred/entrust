@@ -876,6 +876,12 @@ class EntrustUserTest extends TestCase
         $user->id = 4;
         $user->primaryKey = 'id';
 
+        $roleA->shouldReceive('cachedPermissions')->andReturn($roleA->perms);
+        Config::shouldReceive('get')->with('entrust.role_user_table')->andReturn('role_user');
+        Config::shouldReceive('get')->with('cache.ttl')->andReturn('1440');
+        Cache::shouldReceive('tags->remember')->andReturn($user->roles);
+        Cache::shouldReceive('getStore')->andReturn(new ArrayStore);
+
         function isExceptionThrown(
             HasRoleUser $user,
             array $roles,
@@ -900,7 +906,7 @@ class EntrustUserTest extends TestCase
         */
         $user->shouldReceive('hasRole')
             ->times(3);
-        $user->shouldReceive('can')
+        $user->shouldReceive('cans')
             ->times(3);
 
         /*

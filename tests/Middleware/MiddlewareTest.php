@@ -3,6 +3,9 @@
 
 use PHPunit\Framework\TestCase;
 use Mockery as m;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Config;
 
 abstract class MiddlewareTest extends TestCase
 {
@@ -29,6 +32,16 @@ abstract class MiddlewareTest extends TestCase
 		        MiddlewareTest::$abortCode = $code;
 		    }
 		}
+	}
+
+	protected function setUp(): void
+	{
+		parent::setUp();
+
+		Facade::clearResolvedInstances();
+		Facade::setFacadeApplication(new Container());
+
+		Config::shouldReceive('get')->andReturn(null)->byDefault();
 	}
 
 	public function tearDown(): void
