@@ -147,15 +147,15 @@ class EntrustUserTest extends TestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertTrue($user->can('manage_a'));
-        $this->assertTrue($user->can('manage_b'));
-        $this->assertTrue($user->can('manage_c'));
-        $this->assertFalse($user->can('manage_d'));
+        $this->assertTrue($user->cans('manage_a'));
+        $this->assertTrue($user->cans('manage_b'));
+        $this->assertTrue($user->cans('manage_c'));
+        $this->assertFalse($user->cans('manage_d'));
 
-        $this->assertTrue($user->can(['manage_a', 'manage_b', 'manage_c']));
-        $this->assertTrue($user->can(['manage_a', 'manage_b', 'manage_d']));
-        $this->assertFalse($user->can(['manage_a', 'manage_b', 'manage_d'], true));
-        $this->assertFalse($user->can(['manage_d', 'manage_e']));
+        $this->assertTrue($user->cans(['manage_a', 'manage_b', 'manage_c']));
+        $this->assertTrue($user->cans(['manage_a', 'manage_b', 'manage_d']));
+        $this->assertFalse($user->cans(['manage_a', 'manage_b', 'manage_d'], true));
+        $this->assertFalse($user->cans(['manage_d', 'manage_e']));
     }
 
 
@@ -193,13 +193,13 @@ class EntrustUserTest extends TestCase
         | Assertion
         |------------------------------------------------------------
         */
-        $this->assertTrue($user->can('admin.posts'));
-        $this->assertTrue($user->can('admin.pages'));
-        $this->assertTrue($user->can('admin.users'));
-        $this->assertFalse($user->can('admin.config'));
+        $this->assertTrue($user->cans('admin.posts'));
+        $this->assertTrue($user->cans('admin.pages'));
+        $this->assertTrue($user->cans('admin.users'));
+        $this->assertFalse($user->cans('admin.config'));
 
-        $this->assertTrue($user->can(['admin.*']));
-        $this->assertFalse($user->can(['site.*']));
+        $this->assertTrue($user->cans(['admin.*']));
+        $this->assertFalse($user->cans(['site.*']));
     }
 
 

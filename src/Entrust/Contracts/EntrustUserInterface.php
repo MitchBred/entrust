@@ -39,7 +39,7 @@ interface EntrustUserInterface
      *
      * @return bool
      */
-    public function can($permission, $requireAll = false);
+    public function cans($permission, $requireAll = false);
 
     /**
      * Checks role(s) and permission(s).
@@ -52,7 +52,7 @@ interface EntrustUserInterface
      *
      * @return array|bool
      */
-    public function ability($roles, $permissions, $options = []);
+    public function ability($roles, $permissions, array $options = []): bool|array;
 
     /**
      * Alias to eloquent many-to-many relation's attach() method.
