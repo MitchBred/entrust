@@ -2,35 +2,57 @@ name: PHP Composer
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        laravel: [ '^12.0', '^13.0' ]
+
+    name: Laravel ${{ matrix.laravel }}
 
     steps:
     - uses: actions/checkout@v7
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.4'
+        coverage: none
+
+    - name: Validate composer.json
+      run: composer validate --strict --no-check-lock
 
     - name: Cache Composer packages
-      id: composer-cache
       uses: actions/cache@v6
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php-${{ matrix.laravel }}-${{ hashFiles('**/composer.json') }}
         restore-keys: |
-          ${{ runner.os }}-php-
+          ${{ runner.os }}-php-${{ matrix.laravel }}-
+
+    - name: Pin Laravel version
+      run: |
+        composer require --no-update --no-interaction \
+          "illuminate/cache:${{ matrix.laravel }}" \
+          "illuminate/console:${{ matrix.laravel }}" \
+          "illuminate/contracts:${{ matrix.laravel }}" \
+          "illuminate/database:${{ matrix.laravel }}" \
+          "illuminate/filesystem:${{ matrix.laravel }}" \
+          "illuminate/http:${{ matrix.laravel }}" \
+          "illuminate/support:${{ matrix.laravel }}" \
+          "illuminate/view:${{ matrix.laravel }}"
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: composer update --prefer-dist --no-progress --no-interaction
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    - name: Show resolved Laravel version
+      run: composer show illuminate/support | head -3
 
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: Run test suite
+      run: composer run-script test
