@@ -435,7 +435,7 @@ class EntrustTest extends TestCase
         $entrust->routeNeedsRoleOrPermission($route, $roleName, $permName, $expectedResponse, $requireAll);
     }
 
-    protected function makeFilterName($route, array $roles, array $permissions = null)
+    protected function makeFilterName($route, array $roles, ?array $permissions = null)
     {
         if (is_null($permissions)) {
             return implode('_', $roles) . '_' . substr(md5($route), 0, 6);
