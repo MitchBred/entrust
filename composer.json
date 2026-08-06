@@ -52,6 +52,6 @@
   },
   "scripts": {
     "test": "phpunit",
-    "lint": "phplint"
+    "lint": "phplint src tests rector.php"
   }
 }
