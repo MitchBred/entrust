@@ -1,14 +1,25 @@
 name: CI
 
-on: push
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
-      - name: Checking PHP syntax error
-        uses: overtrue/phplint@9.8
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          path: .
-          options: --exclude=*.log
+          php-version: '8.4'
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Checking PHP syntax error
+        run: composer run-script lint
